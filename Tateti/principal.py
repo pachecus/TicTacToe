@@ -12,18 +12,21 @@ def evaluar_tablero(tablero):
                 return -1  # gana la máquina
     if "-" not in tablero:
         return 0  # empate
-    return None  # el juego no ha terminado
+    return None  # el juego no termino
 
 
 def movimientos_legales(tablero):
-    return [i for i, celda in enumerate(tablero) if celda == "-"]
+    return [i for i, celda in enumerate(tablero) if celda == "-"] # son las celdas que no tienen ni X ni O
 
 
-def minimax(tablero, profundidad, es_maximizando):
+def minimax(tablero, profundidad, es_maximizando): # algoritmo que evalua las posiciones posibles
     resultado = evaluar_tablero(tablero)
 
     if resultado is not None:
         return resultado
+    
+    if profundidad >= profundidad_maxima:  # Si se alcanza la profundidad máxima
+        return 0  # Retornar 0 porque no se sabe si es una situación ganadora o perdedora
 
     if es_maximizando:
         mejor_valor = float("-inf")
@@ -110,6 +113,7 @@ def jugar():
 
 
 # Iniciar el juego
+profundidad_maxima = 7
 jugar()
 
 
