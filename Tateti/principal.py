@@ -84,7 +84,7 @@ def jugar():
     while not juego_terminado(tablero):
         imprimir_tablero(tablero)
 
-        # Turno del jugador humano
+        # Turno del jugador
         movimiento_valido = False
         while not movimiento_valido:
             movimiento = int(input("Ingresa tu movimiento (0-8): "))
@@ -97,7 +97,7 @@ def jugar():
         if juego_terminado(tablero):
             break
 
-        # Turno de la IA
+        # Turno de la maquina
         movimiento_ia = mejor_movimiento(tablero)
         tablero[movimiento_ia] = "O"
 
