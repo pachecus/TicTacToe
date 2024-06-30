@@ -1,3 +1,7 @@
+import os
+import tkinter as tk
+from tkinter import messagebox
+
 def evaluar_tablero(tablero):
     combinaciones_ganadoras = [[0, 1, 2], [3, 4, 5], [6, 7, 8],  # Filas
                                [0, 3, 6], [1, 4, 7], [2, 5, 8],  # Columnas
@@ -5,7 +9,7 @@ def evaluar_tablero(tablero):
                                ]
     for combinacion in combinaciones_ganadoras:
         a, b, c = combinacion
-        if tablero[a] == tablero[b] == tablero[c] != "-":
+        if tablero[a] == tablero[b] and tablero[a] == tablero[c] and tablero[a] != "-":
             if tablero[a] == "X":
                 return 1  # gana el jugador
             else:
@@ -19,30 +23,31 @@ def movimientos_legales(tablero):
     return [i for i, celda in enumerate(tablero) if celda == "-"] # son las celdas que no tienen ni X ni O
 
 
-def minimax(tablero, profundidad, es_maximizando): # algoritmo que evalua las posiciones posibles
+def minimax(tablero, profundidad, es_maximizando): # algoritmo que evalua las posiciones posibles pero ligeramente modificado
     resultado = evaluar_tablero(tablero)
-
+    
     if resultado is not None:
-        return resultado
+        return resultado * (profundidad_maxima - profundidad + 1)
+
     
     if profundidad >= profundidad_maxima:  # Si se alcanza la profundidad máxima
         return 0  # Retornar 0 porque no se sabe si es una situación ganadora o perdedora
-
+    
     if es_maximizando:
-        mejor_valor = float("-inf")
+        mejor_valor = float("inf")
         for movimiento in movimientos_legales(tablero):
             tablero[movimiento] = "O"
             valor = minimax(tablero, profundidad + 1, False)
             tablero[movimiento] = "-"
-            mejor_valor = max(mejor_valor, valor)
+            mejor_valor = min(mejor_valor, valor)
         return mejor_valor
     else:
-        peor_valor = float("inf")
+        peor_valor = float("-inf")
         for movimiento in movimientos_legales(tablero):
             tablero[movimiento] = "X"
             valor = minimax(tablero, profundidad + 1, True)
             tablero[movimiento] = "-"
-            peor_valor = min(peor_valor, valor)
+            peor_valor = max(peor_valor, valor)
         return peor_valor
 
 
@@ -54,8 +59,7 @@ def mejor_movimiento(tablero):
         tablero[movimiento] = "O"
         puntaje = minimax(tablero, 0, False)
         tablero[movimiento] = "-"
-        print("Movimiento - " , movimiento , " con puntaje ->" , puntaje)
-        if (puntaje > mejor_puntaje) and (mejor_puntaje == float("-inf")):
+        if mejor_puntaje == float("-inf"):
             mejor_puntaje = puntaje
             mejor_mov = movimiento
         elif puntaje < mejor_puntaje:
@@ -71,6 +75,7 @@ def juego_terminado(tablero):
 
 
 def imprimir_tablero(tablero):
+    os.system('cls')
     print("\n")
     print(tablero[0] + " | " + tablero[1] + " | " + tablero[2])
     print(tablero[3] + " | " + tablero[4] + " | " + tablero[5])
@@ -112,8 +117,5 @@ def jugar():
         print("Empate.")
 
 
-# Iniciar el juego
-profundidad_maxima = 7
+profundidad_maxima = 9
 jugar()
-
-
